@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Leaflet Map with Basemaps and GeoJSON Overlays</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* Ensure the map fills the entire viewport */
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Leaflet Compass -->
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+
+<script>
+    // Initialize the map
+    var map = L.map('map').setView([13.736717, 100.523186], 10); // Bangkok coordinates as example
+
+    // Define base maps
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    });
+
+    // Add OpenStreetMap as the default basemap
+    osm.addTo(map);
+
+    // Layer control
+    var baseMaps = {
+        "OpenStreetMap": osm,
+        "Satellite": satellite
+    };
+
+
+    L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+    // Add map scale
+    L.control.scale().addTo(map);
+
+
+
+</script>
+
+</body>
+</html>
