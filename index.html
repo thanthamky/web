@@ -3,9 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Responsive Leaflet Map with Basemaps and GeoJSON Overlays</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-compass@0.3.0/dist/leaflet-compass.css" />
+    <style>
+        /* Ensure the map fills the entire viewport */
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hey! This is my git page!</h1>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<!-- Leaflet Compass -->
+<script src="https://unpkg.com/leaflet-compass@0.3.0/dist/leaflet-compass.min.js"></script>
+
+<script>
+    // Initialize the map
+    var map = L.map('map').setView([13.736717, 100.523186], 10); // Bangkok coordinates as example
+
+    // Define base maps
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    });
+
+    var satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 19,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        attribution: '© Google Satellite'
+    });
+
+    // Add OpenStreetMap as the default basemap
+    osm.addTo(map);
+
+    // Define GeoJSON overlays
+    var geojsonLayer1 = L.geoJSON(null, { style: { color: 'red' } }).addTo(map);  // Replace 'null' with your actual GeoJSON data for Layer 1
+    var geojsonLayer2 = L.geoJSON(null, { style: { color: 'blue' } });  // Replace 'null' with your actual GeoJSON data for Layer 2
+    var geojsonLayer3 = L.geoJSON(null, { style: { color: 'green' } });  // Replace 'null' with your actual GeoJSON data for Layer 3
+
+    // Layer control
+    var baseMaps = {
+        "OpenStreetMap": osm,
+        "Satellite": satellite
+    };
+
+    var overlayMaps = {
+        "Layer 1": geojsonLayer1,
+        "Layer 2": geojsonLayer2,
+        "Layer 3": geojsonLayer3,
+        "Layer 4": geojsonLayer4
+    };
+
+    L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+    // Add map scale
+    L.control.scale().addTo(map);
+
+    // Add compass
+    L.control.compass({
+        autoActive: true,
+        showDigit: true
+    }).addTo(map);
+
+    // Load GeoJSON data (Replace with actual file paths or URLs)
+    fetch('opendata_project_clip.geojson')
+        .then(response => response.json())
+        .then(data => geojsonLayer1.addData(data));
+
+    fetch('department_store.geojson')
+        .then(response => response.json())
+        .then(data => geojsonLayer2.addData(data));
+
+    fetch('hub_lines.geojson')
+        .then(response => response.json())
+        .then(data => geojsonLayer3.addData(data));
+
+    fetch('department_store_voronoi.geojson')
+        .then(response => response.json())
+        .then(data => geojsonLayer3.addData(data));
+
+</script>
+
 </body>
 </html>
